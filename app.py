@@ -3,9 +3,8 @@ from pymongo import MongoClient
 from google import genai
 from google.genai import types
 
-MONGO_URI = "mongodb+srv://hafidisouhail02_db_user:by29plkxHb3jqfjw@suptech-rag-cluster.fve4sm1.mongodb.net/?appName=Suptech-RAG-Cluster"
-
-GEMINI_API_KEY = "AIzaSyBSUiXGyZE11_3jq8tspVxME7U2yFvXHGY" 
+MONGO_URI = st.secrets["MONGO_URI"]
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # connect to db
 @st.cache_resource
