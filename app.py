@@ -40,13 +40,32 @@ with st.sidebar:
                 if ext:
                     user_pdf_text += ext + "\n"
         st.success("done")
-        
+    
+    st.divider()
+
+    if st.button("📝 generate quiz"):
+        with st.spinner("creating quiz..."):
+            quiz_prompt = f"generate a 5-question multiple choice quiz based on these notes: {user_pdf_text if user_pdf_text else 'course database'}. provide answers at the end."
+            
+            # we use the database context if no file is uploaded
+            if not user_pdf_text:
+                results = collection.find().limit(5)
+                quiz_context = "\n".join([doc["text"] for doc in results])
+                quiz_prompt = f"generate a 5-question multiple choice quiz based on these course notes: {quiz_context}. provide answers at the end."
+
+            quiz_res = gemini_client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=quiz_prompt
+            )
+            st.session_state.messages.append({"role": "assistant", "content": quiz_res.text})
+            st.rerun()
+
     st.divider()
     
     st.markdown("""
         <div style='text-align: center; color: gray; font-size: 13px; margin-top: 20px;'>
             © 2026 souhail hafidi<br>
-            filière: <b>[GDIAS]</b>
+            filière: <b>GDIAS</b>
         </div>
     """, unsafe_allow_html=True)
 
