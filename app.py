@@ -17,12 +17,12 @@ def init_db():
 collection = init_db()
 gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
-st.title("Souhail's Suptech AI")
+st.title("🎓 suptech ai tutor")
 st.markdown("ask the database or upload your own notes below.")
 
 with st.sidebar:
     try:
-        st.image("log_suptech.png", use_container_width=True)
+        st.image("logo.png", use_container_width=True)
     except FileNotFoundError:
         pass
         
@@ -46,7 +46,7 @@ with st.sidebar:
     st.markdown("""
         <div style='text-align: center; color: gray; font-size: 13px; margin-top: 20px;'>
             © 2026 souhail hafidi<br>
-            filière: <b>[GDIAS]</b>
+            filière: <b>[insert your filière]</b>
         </div>
     """, unsafe_allow_html=True)
 
@@ -86,6 +86,10 @@ if user_query:
             
             context_text = "\n\n".join([doc["text"] for doc in results])
 
+            history_string = ""
+            for msg in st.session_state.messages[-5:-1]: 
+                history_string += f"{msg['role']}: {msg['content']}\n"
+
             prompt = f"""
             answer the student's question using the course notes. 
             prioritize the user's uploaded notes if they exist.
@@ -96,6 +100,9 @@ if user_query:
             
             uploaded notes:
             {user_pdf_text}
+
+            recent chat history:
+            {history_string}
             
             question: {user_query}
             """
