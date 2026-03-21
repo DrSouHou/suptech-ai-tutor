@@ -33,6 +33,7 @@ with st.sidebar:
     
     user_pdf_text = ""
     if uploaded_file:
+        uploaded_file.seek(0)
         with st.spinner("reading..."):
             reader = PyPDF2.PdfReader(uploaded_file)
             for page in reader.pages:
@@ -52,12 +53,18 @@ with st.sidebar:
                 quiz_context = "\n".join([doc["text"] for doc in results])
                 quiz_prompt = f"generate a 5-question multiple choice quiz based on these course notes: {quiz_context}. provide answers at the end without citations."
 
-            quiz_res = gemini_client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=quiz_prompt
-            )
-            st.session_state.messages.append({"role": "assistant", "content": quiz_res.text})
-            st.rerun()
+            try:
+                quiz_res = gemini_client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=quiz_prompt
+                )
+                st.session_state.messages.append({"role": "assistant", "content": quiz_res.text})
+                st.rerun()
+            except Exception as e:
+                if "429" in str(e):
+                    st.error("google api speed limit hit! wait about 30 seconds and try again.")
+                else:
+                    st.error(f"error: {e}")
 
     st.divider()
     
@@ -84,59 +91,66 @@ if user_query:
 
     with st.chat_message("assistant"):
         with st.spinner("thinking..."):
-            embed_response = gemini_client.models.embed_content(
-                model="gemini-embedding-001",
-                contents=user_query,
-            )
-            query_vector = embed_response.embeddings[0].values
-
-            results = collection.aggregate([
-                {
-                    "$vectorSearch": {
-                        "index": "default", 
-                        "path": "embedding",
-                        "queryVector": query_vector,
-                        "numCandidates": 50,
-                        "limit": 3
-                    }
-                }
-            ])
-            
-            context_text = "\n\n".join([doc["text"] for doc in results])
-
-            history_string = ""
-            for msg in st.session_state.messages[-5:-1]: 
-                history_string += f"{msg['role']}: {msg['content']}\n"
-
-            prompt = f"""
-            you are a chill tutor for suptech students.
-            use the provided notes to answer. 
-            
-            IMPORTANT: 
-            - DO NOT mention 'Pr I.DEBBARH', page numbers, or specific file names.
-            - DO NOT cite sources for 'db notes'. Just give the answer naturally.
-            - ONLY if you use 'uploaded notes', you can say 'based on your file'.
-            - keep the tone helpful and direct.
-            
-            db notes:
-            {context_text}
-            
-            uploaded notes:
-            {user_pdf_text}
-
-            recent chat history:
-            {history_string}
-            
-            question: {user_query}
-            """
-            
-            response = gemini_client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    tools=[{"google_search": {}}],
+            try:
+                embed_response = gemini_client.models.embed_content(
+                    model="gemini-embedding-001",
+                    contents=user_query,
                 )
-            )
-            
-            st.markdown(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
+                query_vector = embed_response.embeddings[0].values
+
+                results = collection.aggregate([
+                    {
+                        "$vectorSearch": {
+                            "index": "default", 
+                            "path": "embedding",
+                            "queryVector": query_vector,
+                            "numCandidates": 50,
+                            "limit": 3
+                        }
+                    }
+                ])
+                
+                context_text = "\n\n".join([doc["text"] for doc in results])
+
+                history_string = ""
+                for msg in st.session_state.messages[-5:-1]: 
+                    history_string += f"{msg['role']}: {msg['content']}\n"
+
+                prompt = f"""
+                you are a chill tutor for suptech students.
+                use the provided notes to answer. 
+                
+                IMPORTANT: 
+                - DO NOT mention professors' names, page numbers, or file names.
+                - DO NOT cite sources for 'db notes'. Just give the answer naturally.
+                - ONLY if you use 'uploaded notes', you can say 'based on your file'.
+                - keep the tone helpful and direct.
+                
+                db notes:
+                {context_text}
+                
+                uploaded notes:
+                {user_pdf_text}
+
+                recent chat history:
+                {history_string}
+                
+                question: {user_query}
+                """
+                
+                response = gemini_client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        tools=[{"google_search": {}}],
+                    )
+                )
+                
+                st.markdown(response.text)
+                st.session_state.messages.append({"role": "assistant", "content": response.text})
+                
+            except Exception as e:
+                if "429" in str(e):
+                    st.warning("whoa, too many questions too fast! google's free tier needs a quick breather. try again in 30 seconds.")
+                else:
+                    st.error(f"app error: {e}")
