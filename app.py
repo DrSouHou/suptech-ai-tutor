@@ -4,10 +4,11 @@ from pymongo import MongoClient
 from google import genai
 from google.genai import types
 
+st.set_page_config(page_title="suptech ai", page_icon="🎓", layout="centered")
+
 MONGO_URI = st.secrets["MONGO_URI"]
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
-# connect to db
 @st.cache_resource
 def init_db():
     client = MongoClient(MONGO_URI)
@@ -16,12 +17,18 @@ def init_db():
 collection = init_db()
 gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
-st.title("suptech ai tutor")
-st.caption("ask about courses or upload your own notes")
+st.title("🎓 suptech ai tutor")
+st.markdown("ask the database or upload your own notes below.")
 
-# sidebar for custom files
 with st.sidebar:
-    st.write("upload specific notes/slides here")
+    try:
+        st.image("logo.png", use_container_width=True)
+    except FileNotFoundError:
+        pass
+        
+    st.divider()
+    
+    st.header("📂 your notes")
     uploaded_file = st.file_uploader("pdf only", type="pdf")
     
     user_pdf_text = ""
@@ -33,8 +40,16 @@ with st.sidebar:
                 if ext:
                     user_pdf_text += ext + "\n"
         st.success("done")
+        
+    st.divider()
+    
+    st.markdown("""
+        <div style='text-align: center; color: gray; font-size: 13px; margin-top: 20px;'>
+            © 2026 souhail hafidi<br>
+            filière: <b>[GDIAS]</b>
+        </div>
+    """, unsafe_allow_html=True)
 
-# chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -51,14 +66,12 @@ if user_query:
 
     with st.chat_message("assistant"):
         with st.spinner("thinking..."):
-            # get vector
             embed_response = gemini_client.models.embed_content(
                 model="gemini-embedding-001",
                 contents=user_query,
             )
             query_vector = embed_response.embeddings[0].values
 
-            # search db
             results = collection.aggregate([
                 {
                     "$vectorSearch": {
