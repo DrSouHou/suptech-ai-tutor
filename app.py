@@ -17,12 +17,12 @@ def init_db():
 collection = init_db()
 gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
-st.title("🎓 suptech ai tutor")
+st.title("🎓 Souhail's Suptech AI Tutor")
 st.markdown("ask the database or upload your own notes below.")
 
 with st.sidebar:
     try:
-        st.image("logo.png", use_container_width=True)
+        st.image("log_suptech.png", use_container_width=True)
     except FileNotFoundError:
         pass
         
