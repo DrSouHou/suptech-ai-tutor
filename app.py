@@ -22,7 +22,7 @@ st.markdown("ask the database or upload your own notes below.")
 
 with st.sidebar:
     try:
-        st.image("logo.png", use_container_width=True)
+        st.image("log_suptech.png", use_container_width=True)
     except FileNotFoundError:
         pass
         
