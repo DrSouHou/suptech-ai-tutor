@@ -46,7 +46,7 @@ with st.sidebar:
     st.markdown("""
         <div style='text-align: center; color: gray; font-size: 13px; margin-top: 20px;'>
             © 2026 souhail hafidi<br>
-            filière: <b>[insert your filière]</b>
+            filière: <b>[GDIAS]</b>
         </div>
     """, unsafe_allow_html=True)
 
