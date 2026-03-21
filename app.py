@@ -17,7 +17,7 @@ def init_db():
 collection = init_db()
 gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
-st.title("🎓 suptech ai tutor")
+st.title("Souhail's Suptech AI")
 st.markdown("ask the database or upload your own notes below.")
 
 with st.sidebar:
