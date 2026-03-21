@@ -45,11 +45,10 @@ with st.sidebar:
 
     if st.button("📝 generate quiz"):
         with st.spinner("creating quiz..."):
-            quiz_prompt = f"generate a 5-question multiple choice quiz based on these notes: {user_pdf_text if user_pdf_text else 'course database'}. provide answers at the end."
-            
-            # we use the database context if no file is uploaded
-            if not user_pdf_text:
-                results = collection.find().limit(5)
+            if user_pdf_text:
+                quiz_prompt = f"generate a 5-question multiple choice quiz based strictly on these uploaded notes: {user_pdf_text}. provide answers at the end."
+            else:
+                results = collection.find().limit(10)
                 quiz_context = "\n".join([doc["text"] for doc in results])
                 quiz_prompt = f"generate a 5-question multiple choice quiz based on these course notes: {quiz_context}. provide answers at the end."
 
@@ -111,8 +110,9 @@ if user_query:
 
             prompt = f"""
             answer the student's question using the course notes. 
-            prioritize the user's uploaded notes if they exist.
-            use google search if needed.
+            if you use information from the 'uploaded notes', explicitly mention 'based on your upload'.
+            do not mention sources for 'db notes'.
+            use google search if the answer isn't in either.
             
             db notes:
             {context_text}
