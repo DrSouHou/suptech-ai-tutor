@@ -46,11 +46,11 @@ with st.sidebar:
     if st.button("📝 generate quiz"):
         with st.spinner("creating quiz..."):
             if user_pdf_text:
-                quiz_prompt = f"generate a 5-question multiple choice quiz based strictly on these uploaded notes: {user_pdf_text}. provide answers at the end."
+                quiz_prompt = f"generate a 5-question multiple choice quiz based strictly on these uploaded notes: {user_pdf_text}. provide answers at the end without citations."
             else:
                 results = collection.find().limit(10)
                 quiz_context = "\n".join([doc["text"] for doc in results])
-                quiz_prompt = f"generate a 5-question multiple choice quiz based on these course notes: {quiz_context}. provide answers at the end."
+                quiz_prompt = f"generate a 5-question multiple choice quiz based on these course notes: {quiz_context}. provide answers at the end without citations."
 
             quiz_res = gemini_client.models.generate_content(
                 model='gemini-2.5-flash',
@@ -109,10 +109,14 @@ if user_query:
                 history_string += f"{msg['role']}: {msg['content']}\n"
 
             prompt = f"""
-            answer the student's question using the course notes. 
-            if you use information from the 'uploaded notes', explicitly mention 'based on your upload'.
-            do not mention sources for 'db notes'.
-            use google search if the answer isn't in either.
+            you are a chill tutor for suptech students.
+            use the provided notes to answer. 
+            
+            IMPORTANT: 
+            - DO NOT mention 'Pr I.DEBBARH', page numbers, or specific file names.
+            - DO NOT cite sources for 'db notes'. Just give the answer naturally.
+            - ONLY if you use 'uploaded notes', you can say 'based on your file'.
+            - keep the tone helpful and direct.
             
             db notes:
             {context_text}
