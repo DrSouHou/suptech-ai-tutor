@@ -6,6 +6,24 @@ from google.genai import types
 
 st.set_page_config(page_title="suptech ai", page_icon="🎓", layout="centered")
 
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    st.markdown("<h1 style='text-align: center;'>🔒 Suptech AI Access</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>Please enter the class password to access the AI tutor.</p>", unsafe_allow_html=True)
+    
+    pwd = st.text_input("Password", type="password", placeholder="Enter password here...")
+    
+    if st.button("Login", use_container_width=True):
+        if pwd == "GDIAS2026":
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("❌ Incorrect password. Try again.")
+            
+    st.stop() 
+
 MONGO_URI = st.secrets["MONGO_URI"]
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
