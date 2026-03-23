@@ -55,7 +55,7 @@ with st.sidebar:
 
             try:
                 quiz_res = gemini_client.models.generate_content(
-                    model='gemini-2.0-flash',
+                    model='gemini-2.5-flash',
                     contents=quiz_prompt
                 )
                 st.session_state.messages.append({"role": "assistant", "content": quiz_res.text})
@@ -139,7 +139,7 @@ if user_query:
                 """
                 
                 response = gemini_client.models.generate_content(
-                    model='gemini-2.0-flash',
+                    model='gemini-2.5-flash',
                     contents=prompt,
                     config=types.GenerateContentConfig(
                         tools=[{"google_search": {}}],
