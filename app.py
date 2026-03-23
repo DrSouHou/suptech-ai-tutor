@@ -1,8 +1,3 @@
-Awesome. To add the welcoming message, we just inject it into the chat history the very first time the app loads. 
-
-Here is the fully updated code with no comments. I added the welcome message right above the chat input section.
-
-```python
 import streamlit as st
 import PyPDF2
 from pymongo import MongoClient
@@ -179,4 +174,3 @@ if user_query:
                     st.warning("whoa, too many questions too fast! google's free tier needs a quick breather. try again in 30 seconds.")
                 else:
                     st.error(f"app error: {e}")
-```
