@@ -16,7 +16,7 @@ if not st.session_state.authenticated:
     pwd = st.text_input("Password", type="password", placeholder="Enter password here...")
     
     if st.button("Login", use_container_width=True):
-        if pwd = st.secrets["pwd"]
+        if pwd == st.secrets["pwd"]:
             st.session_state.authenticated = True
             st.rerun()
         else:
