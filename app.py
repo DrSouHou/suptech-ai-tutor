@@ -16,7 +16,7 @@ if not st.session_state.authenticated:
     pwd = st.text_input("Password", type="password", placeholder="Enter password here...")
     
     if st.button("Login", use_container_width=True):
-        if pwd == "GDIAS2026":
+        if pwd = st.secrets["pwd"]
             st.session_state.authenticated = True
             st.rerun()
         else:
@@ -76,21 +76,13 @@ with st.sidebar:
                     model='gemini-2.5-flash',
                     contents=quiz_prompt
                 )
-                st.session_state.messages.append({"role": "assistant", "content": quiz_res.text, "sources": ""})
+                st.session_state.messages.append({"role": "assistant", "content": quiz_res.text})
                 st.rerun()
             except Exception as e:
                 if "429" in str(e):
                     st.error("google api speed limit hit! wait about 30 seconds and try again.")
                 else:
                     st.error(f"error: {e}")
-
-    st.divider()
-
-    if st.button("🗑️ clear chat"):
-        st.session_state.messages = [
-            {"role": "assistant", "content": "welcome to the suptech ai tutor! 👋 upload your notes on the left or ask me a question about the course to get started.", "sources": ""}
-        ]
-        st.rerun()
 
     st.divider()
     
@@ -102,40 +94,25 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "assistant", "content": "welcome to the suptech ai tutor! 👋 upload your notes on the left or ask me a question about the course to get started.", "sources": ""}
-    ]
+    st.session_state.messages = []
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
-        if msg.get("sources"):
-            with st.expander("📚 Sources used"):
-                st.markdown(f"<div style='font-size: 12px; color: gray;'>{msg['sources']}</div>", unsafe_allow_html=True)
-
-quick_prompt = None
-c1, c2, c3 = st.columns(3)
-if c1.button("📝 summarize notes", use_container_width=True): 
-    quick_prompt = "Please summarize the core concepts from the notes."
-if c2.button("🧠 explain like i'm 5", use_container_width=True): 
-    quick_prompt = "Explain the main topic of these notes simply, like I'm 5 years old."
-if c3.button("🗂️ create flashcards", use_container_width=True): 
-    quick_prompt = "Create 3 study flashcards based on the notes (Q & A format)."
 
 user_query = st.chat_input("ask something...")
-final_query = user_query or quick_prompt
 
-if final_query:
+if user_query:
     with st.chat_message("user"):
-        st.markdown(final_query)
-    st.session_state.messages.append({"role": "user", "content": final_query})
+        st.markdown(user_query)
+    st.session_state.messages.append({"role": "user", "content": user_query})
 
     with st.chat_message("assistant"):
         with st.spinner("thinking..."):
             try:
                 embed_response = gemini_client.models.embed_content(
                     model="gemini-embedding-001",
-                    contents=final_query,
+                    contents=user_query,
                 )
                 query_vector = embed_response.embeddings[0].values
 
@@ -176,7 +153,7 @@ if final_query:
                 recent chat history:
                 {history_string}
                 
-                question: {final_query}
+                question: {user_query}
                 """
                 
                 response = gemini_client.models.generate_content(
@@ -188,12 +165,7 @@ if final_query:
                 )
                 
                 st.markdown(response.text)
-                
-                if context_text.strip():
-                    with st.expander("📚 Sources used"):
-                        st.markdown(f"<div style='font-size: 12px; color: gray;'>{context_text}</div>", unsafe_allow_html=True)
-                        
-                st.session_state.messages.append({"role": "assistant", "content": response.text, "sources": context_text})
+                st.session_state.messages.append({"role": "assistant", "content": response.text})
                 
             except Exception as e:
                 if "429" in str(e):
