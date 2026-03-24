@@ -6,6 +6,45 @@ from google.genai import types
 
 st.set_page_config(page_title="suptech ai", page_icon="🎓", layout="centered")
 
+# --- COLOR PALETTE THEMING ---
+suptech_cyan = "#01B6CF"   
+suptech_blue = "#1F8EA0"   
+
+st.markdown(f"""
+<style>
+.stApp {{
+    background-color: #FFFFFF;
+}}
+[data-testid="stAppViewContainer"] div[role="radiogroup"] {{
+    accent-color: {suptech_cyan};
+}}
+div.stButton > button {{
+    background-color: {suptech_cyan} !important;
+    color: white !important;
+    border: none !important;
+}}
+div.stButton > button:hover {{
+    background-color: {suptech_blue} !important;
+    color: white !important;
+}}
+[data-testid="stHeader"] {{
+    background-color: rgba(255, 255, 255, 0.0);
+}}
+h1, h2, h3 {{
+    color: {suptech_blue} !important;
+}}
+[data-testid="stSidebar"] {{
+    background-color: #F8FDFF;
+}}
+[data-testid="stSidebar"] .stMarkdown {{
+    color: {suptech_blue};
+}}
+div[data-testid="stChatInput"] input {{
+    color: {suptech_blue};
+}}
+</style>
+""", unsafe_allow_html=True)
+
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -16,7 +55,7 @@ if not st.session_state.authenticated:
     pwd = st.text_input("Password", type="password", placeholder="Enter password here...")
     
     if st.button("Login", use_container_width=True):
-       if pwd == st.secrets["pwd"]:
+        if pwd == st.secrets["pwd"]:
             st.session_state.authenticated = True
             st.rerun()
         else:
