@@ -10,15 +10,12 @@ st.set_page_config(page_title="Souhail ai", page_icon="🎓", layout="centered")
 suptech_cyan = "#01B6CF"   
 suptech_blue = "#1F8EA0"   
 
-import streamlit as st
-
 # 1. Initialize the theme state
 if "theme" not in st.session_state:
     st.session_state.theme = "light"
 
 # 2. Add the toggle switch to the sidebar
 with st.sidebar:
-    # We use a toggle. If it's True, we are in dark mode.
     is_dark = st.toggle("🌙 Dark Mode", value=(st.session_state.theme == "dark"))
     if is_dark:
         st.session_state.theme = "dark"
@@ -34,14 +31,31 @@ if st.session_state.theme == "light":
     # --- LIGHT MODE CSS ---
     st.markdown(f"""
     <style>
+    /* Main Backgrounds & Text */
     .stApp {{ background-color: #FFFFFF !important; color: #31333F !important; }}
     p, div[data-testid="stChatMessageContent"], .stMarkdown {{ color: #31333F !important; }}
+    [data-testid="stSidebar"] {{ background-color: #F8FDFF !important; }}
+    h1, h2, h3 {{ color: {suptech_blue} !important; }}
+    
+    /* Buttons */
     [data-testid="stAppViewContainer"] div[role="radiogroup"] {{ accent-color: {suptech_cyan}; }}
     div.stButton > button {{ background-color: {suptech_cyan} !important; color: white !important; border: none !important; }}
     div.stButton > button:hover {{ background-color: {suptech_blue} !important; color: white !important; }}
-    h1, h2, h3 {{ color: {suptech_blue} !important; }}
-    [data-testid="stSidebar"] {{ background-color: #F8FDFF !important; }}
-    div[data-testid="stChatInput"] input {{ color: #31333F !important; }}
+    
+    /* FIX: Top Header */
+    [data-testid="stHeader"] {{ background-color: #FFFFFF !important; }}
+    
+    /* FIX: Input Boxes (Password) */
+    div[data-baseweb="input"] {{ background-color: #F0F2F6 !important; border-color: #D5D8E2 !important; }}
+    div[data-baseweb="input"] input {{ color: #31333F !important; }}
+    
+    /* FIX: Chat Input Area */
+    [data-testid="stChatInput"] {{ background-color: #FFFFFF !important; }}
+    [data-testid="stChatInput"] textarea {{ color: #31333F !important; background-color: #FFFFFF !important; }}
+    
+    /* FIX: File Uploader */
+    [data-testid="stFileUploader"] section {{ background-color: #F0F2F6 !important; }}
+    [data-testid="stFileUploader"] section * {{ color: #31333F !important; }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -49,17 +63,34 @@ else:
     # --- DARK MODE CSS ---
     st.markdown(f"""
     <style>
+    /* Main Backgrounds & Text */
     .stApp {{ background-color: #0E1117 !important; color: #FAFAFA !important; }}
     p, div[data-testid="stChatMessageContent"], .stMarkdown {{ color: #FAFAFA !important; }}
+    [data-testid="stSidebar"] {{ background-color: #262730 !important; }}
+    h1, h2, h3 {{ color: {suptech_cyan} !important; }}
+    
+    /* Buttons */
     [data-testid="stAppViewContainer"] div[role="radiogroup"] {{ accent-color: {suptech_cyan}; }}
     div.stButton > button {{ background-color: {suptech_cyan} !important; color: white !important; border: none !important; }}
     div.stButton > button:hover {{ background-color: {suptech_blue} !important; color: white !important; }}
-    h1, h2, h3 {{ color: {suptech_cyan} !important; }} /* Swapped header color for better dark mode contrast */
-    [data-testid="stSidebar"] {{ background-color: #262730 !important; }}
-    div[data-testid="stChatInput"] input {{ color: #FAFAFA !important; }}
+    
+    /* FIX: Top Header */
+    [data-testid="stHeader"] {{ background-color: #0E1117 !important; }}
+    
+    /* FIX: Input Boxes (Password) */
+    div[data-baseweb="input"] {{ background-color: #262730 !important; border-color: #4B4C53 !important; }}
+    div[data-baseweb="input"] input {{ color: #FAFAFA !important; }}
+    
+    /* FIX: Chat Input Area */
+    [data-testid="stChatInput"] {{ background-color: #0E1117 !important; }}
+    [data-testid="stChatInput"] textarea {{ color: #FAFAFA !important; }}
+    
+    /* FIX: File Uploader */
+    [data-testid="stFileUploader"] section {{ background-color: #262730 !important; }}
+    [data-testid="stFileUploader"] section * {{ color: #FAFAFA !important; }}
     </style>
     """, unsafe_allow_html=True)
-
+    
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
