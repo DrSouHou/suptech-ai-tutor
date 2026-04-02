@@ -12,9 +12,18 @@ suptech_blue = "#9AE630"
 
 st.markdown(f"""
 <style>
+/* Force white background and dark text for the main app */
 .stApp {{
-    background-color: #FFFFFF;
+    background-color: #FFFFFF !important;
+    color: #31333F !important;
 }}
+
+/* Fix invisible paragraph text and chat messages */
+p, div[data-testid="stChatMessageContent"], .stMarkdown {{
+    color: #31333F !important;
+}}
+
+/* Your existing Suptech branding */
 [data-testid="stAppViewContainer"] div[role="radiogroup"] {{
     accent-color: {suptech_cyan};
 }}
@@ -33,14 +42,18 @@ div.stButton > button:hover {{
 h1, h2, h3 {{
     color: {suptech_blue} !important;
 }}
+
+/* Sidebar styling */
 [data-testid="stSidebar"] {{
-    background-color: #F8FDFF;
+    background-color: #F8FDFF !important;
 }}
-[data-testid="stSidebar"] .stMarkdown {{
-    color: {suptech_blue};
+[data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] p {{
+    color: {suptech_blue} !important;
 }}
+
+/* Force chat input text to be readable */
 div[data-testid="stChatInput"] input {{
-    color: {suptech_blue};
+    color: {suptech_blue} !important;
 }}
 </style>
 """, unsafe_allow_html=True)
