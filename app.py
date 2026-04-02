@@ -49,7 +49,7 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    st.markdown("<h1 style='text-align: center;'>🔒 Suptech AI Access</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🔒 Souhail AI Access</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'>Please enter the class password to access the AI tutor.</p>", unsafe_allow_html=True)
     
     pwd = st.text_input("Password", type="password", placeholder="Enter password here...")
