@@ -27,46 +27,10 @@ suptech_cyan = "#BB4D1A"
 suptech_blue = "#9AE630"   
 
 # 4. Inject different CSS depending on the toggle state
-if st.session_state.theme == "light":
-    # --- LIGHT MODE CSS ---
-    st.markdown(f"""
-    <style>
-    /* Main Backgrounds & Text */
-    .stApp {{ background-color: #FFFFFF !important; color: #31333F !important; }}
-    p, div[data-testid="stChatMessageContent"], .stMarkdown {{ color: #31333F !important; }}
-    [data-testid="stSidebar"] {{ background-color: #F8FDFF !important; }}
-    h1, h2, h3 {{ color: {suptech_blue} !important; }}
-    
-    /* Buttons */
-    [data-testid="stAppViewContainer"] div[role="radiogroup"] {{ accent-color: {suptech_cyan}; }}
-    div.stButton > button {{ background-color: {suptech_cyan} !important; color: white !important; border: none !important; }}
-    div.stButton > button:hover {{ background-color: {suptech_blue} !important; color: white !important; }}
-    
-    /* FIX: Top Header */
-    [data-testid="stHeader"] {{ background-color: #FFFFFF !important; }}
-    
-    /* FIX: Input Boxes (Password) */
-    div[data-baseweb="input"] {{ background-color: #F0F2F6 !important; border-color: #D5D8E2 !important; }}
-    div[data-baseweb="input"] input {{ color: #31333F !important; }}
-    
-    /* FIX: Bottom Container (The black bar around chat input) */
-    [data-testid="stBottom"], [data-testid="stBottomBlockContainer"] {{ background-color: #FFFFFF !important; }}
-    
-    /* FIX: Chat Input Area */
-    [data-testid="stChatInput"] {{ background-color: #FFFFFF !important; }}
-    [data-testid="stChatInput"] > div {{ background-color: #F0F2F6 !important; border-color: #D5D8E2 !important; }}
-    [data-testid="stChatInput"] textarea {{ color: #31333F !important; -webkit-text-fill-color: #31333F !important; }}
-    [data-testid="stChatInput"] button {{ color: #31333F !important; }}
-    
-    /* FIX: File Uploader */
-    [data-testid="stFileUploader"] section {{ background-color: #F0F2F6 !important; }}
-    [data-testid="stFileUploader"] section * {{ color: #31333F !important; }}
-    [data-testid="stFileUploader"] button {{ background-color: #FFFFFF !important; color: #31333F !important; border: 1px solid #D5D8E2 !important; }}
-    </style>
-    """, unsafe_allow_html=True)
-
-else:
-    # --- DARK MODE CSS ---
+if st.session_state.theme == "dark":
+    # --- DARK MODE OVERRIDES ---
+    # Because config.toml handles light mode beautifully, 
+    # we only need to inject CSS when they switch to Dark Mode!
     st.markdown(f"""
     <style>
     /* Main Backgrounds & Text */
@@ -80,26 +44,32 @@ else:
     div.stButton > button {{ background-color: {suptech_cyan} !important; color: white !important; border: none !important; }}
     div.stButton > button:hover {{ background-color: {suptech_blue} !important; color: white !important; }}
     
-    /* FIX: Top Header */
+    /* Top Header */
     [data-testid="stHeader"] {{ background-color: #0E1117 !important; }}
     
-    /* FIX: Input Boxes (Password) */
+    /* Input Boxes (Password) */
     div[data-baseweb="input"] {{ background-color: #262730 !important; border-color: #4B4C53 !important; }}
-    div[data-baseweb="input"] input {{ color: #FAFAFA !important; }}
+    div[data-baseweb="input"] input {{ color: #FAFAFA !important; -webkit-text-fill-color: #FAFAFA !important; }}
     
-    /* FIX: Bottom Container (The black bar around chat input) */
+    /* Bottom Container (The bar around chat input) */
     [data-testid="stBottom"], [data-testid="stBottomBlockContainer"] {{ background-color: #0E1117 !important; }}
     
-    /* FIX: Chat Input Area */
+    /* Chat Input Area */
     [data-testid="stChatInput"] {{ background-color: #0E1117 !important; }}
-    [data-testid="stChatInput"] textarea {{ color: #FAFAFA !important; }}
+    [data-testid="stChatInput"] > div {{ background-color: #262730 !important; border-color: #4B4C53 !important; }}
+    [data-testid="stChatInput"] textarea {{ color: #FAFAFA !important; -webkit-text-fill-color: #FAFAFA !important; }}
+    [data-testid="stChatInput"] button {{ color: #FAFAFA !important; }}
     
-    /* FIX: File Uploader */
+    /* File Uploader */
     [data-testid="stFileUploader"] section {{ background-color: #262730 !important; }}
     [data-testid="stFileUploader"] section * {{ color: #FAFAFA !important; }}
     [data-testid="stFileUploader"] button {{ background-color: #0E1117 !important; color: #FAFAFA !important; border: 1px solid #4B4C53 !important; }}
     </style>
     """, unsafe_allow_html=True)
+else:
+    # --- LIGHT MODE ---
+    # We do nothing! The config.toml file handles the perfect light mode naturally.
+    pass
     
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
