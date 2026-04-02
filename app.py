@@ -79,7 +79,7 @@ st.markdown("ask the database or upload your own notes below.")
 
 with st.sidebar:
     try:
-        st.image("log_suptech.png", width="stretch")
+        st.image("log_new.png", width="stretch")
     except FileNotFoundError:
         pass
         
