@@ -49,13 +49,19 @@ if st.session_state.theme == "light":
     div[data-baseweb="input"] {{ background-color: #F0F2F6 !important; border-color: #D5D8E2 !important; }}
     div[data-baseweb="input"] input {{ color: #31333F !important; }}
     
+    /* FIX: Bottom Container (The black bar around chat input) */
+    [data-testid="stBottom"], [data-testid="stBottomBlockContainer"] {{ background-color: #FFFFFF !important; }}
+    
     /* FIX: Chat Input Area */
     [data-testid="stChatInput"] {{ background-color: #FFFFFF !important; }}
-    [data-testid="stChatInput"] textarea {{ color: #31333F !important; background-color: #FFFFFF !important; }}
+    [data-testid="stChatInput"] > div {{ background-color: #F0F2F6 !important; border-color: #D5D8E2 !important; }}
+    [data-testid="stChatInput"] textarea {{ color: #31333F !important; -webkit-text-fill-color: #31333F !important; }}
+    [data-testid="stChatInput"] button {{ color: #31333F !important; }}
     
     /* FIX: File Uploader */
     [data-testid="stFileUploader"] section {{ background-color: #F0F2F6 !important; }}
     [data-testid="stFileUploader"] section * {{ color: #31333F !important; }}
+    [data-testid="stFileUploader"] button {{ background-color: #FFFFFF !important; color: #31333F !important; border: 1px solid #D5D8E2 !important; }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -81,6 +87,9 @@ else:
     div[data-baseweb="input"] {{ background-color: #262730 !important; border-color: #4B4C53 !important; }}
     div[data-baseweb="input"] input {{ color: #FAFAFA !important; }}
     
+    /* FIX: Bottom Container (The black bar around chat input) */
+    [data-testid="stBottom"], [data-testid="stBottomBlockContainer"] {{ background-color: #0E1117 !important; }}
+    
     /* FIX: Chat Input Area */
     [data-testid="stChatInput"] {{ background-color: #0E1117 !important; }}
     [data-testid="stChatInput"] textarea {{ color: #FAFAFA !important; }}
@@ -88,6 +97,7 @@ else:
     /* FIX: File Uploader */
     [data-testid="stFileUploader"] section {{ background-color: #262730 !important; }}
     [data-testid="stFileUploader"] section * {{ color: #FAFAFA !important; }}
+    [data-testid="stFileUploader"] button {{ background-color: #0E1117 !important; color: #FAFAFA !important; border: 1px solid #4B4C53 !important; }}
     </style>
     """, unsafe_allow_html=True)
     
