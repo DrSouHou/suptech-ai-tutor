@@ -7,8 +7,8 @@ from google.genai import types
 st.set_page_config(page_title="Souhail ai", page_icon="🎓", layout="centered")
 
 # --- COLOR PALETTE THEMING ---
-suptech_cyan = "#01B6CF"   
-suptech_blue = "#1F8EA0"   
+suptech_cyan = "#BB4D1A"   
+suptech_blue = "#9AE630"   
 
 st.markdown(f"""
 <style>
