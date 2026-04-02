@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from google import genai
 from google.genai import types
 
-st.set_page_config(page_title="suptech ai", page_icon="🎓", layout="centered")
+st.set_page_config(page_title="Souhail ai", page_icon="🎓", layout="centered")
 
 # --- COLOR PALETTE THEMING ---
 suptech_cyan = "#01B6CF"   
