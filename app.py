@@ -7,9 +7,58 @@ from google.genai import types
 st.set_page_config(page_title="Souhail ai", page_icon="🎓", layout="centered")
 
 # --- COLOR PALETTE THEMING ---
+suptech_cyan = "#01B6CF"   
+suptech_blue = "#1F8EA0"   
+
+import streamlit as st
+
+# 1. Initialize the theme state
+if "theme" not in st.session_state:
+    st.session_state.theme = "light"
+
+# 2. Add the toggle switch to the sidebar
+with st.sidebar:
+    # We use a toggle. If it's True, we are in dark mode.
+    is_dark = st.toggle("🌙 Dark Mode", value=(st.session_state.theme == "dark"))
+    if is_dark:
+        st.session_state.theme = "dark"
+    else:
+        st.session_state.theme = "light"
+
+# 3. Define your Suptech Colors
 suptech_cyan = "#BB4D1A"   
 suptech_blue = "#9AE630"   
 
+# 4. Inject different CSS depending on the toggle state
+if st.session_state.theme == "light":
+    # --- LIGHT MODE CSS ---
+    st.markdown(f"""
+    <style>
+    .stApp {{ background-color: #FFFFFF !important; color: #31333F !important; }}
+    p, div[data-testid="stChatMessageContent"], .stMarkdown {{ color: #31333F !important; }}
+    [data-testid="stAppViewContainer"] div[role="radiogroup"] {{ accent-color: {suptech_cyan}; }}
+    div.stButton > button {{ background-color: {suptech_cyan} !important; color: white !important; border: none !important; }}
+    div.stButton > button:hover {{ background-color: {suptech_blue} !important; color: white !important; }}
+    h1, h2, h3 {{ color: {suptech_blue} !important; }}
+    [data-testid="stSidebar"] {{ background-color: #F8FDFF !important; }}
+    div[data-testid="stChatInput"] input {{ color: #31333F !important; }}
+    </style>
+    """, unsafe_allow_html=True)
+
+else:
+    # --- DARK MODE CSS ---
+    st.markdown(f"""
+    <style>
+    .stApp {{ background-color: #0E1117 !important; color: #FAFAFA !important; }}
+    p, div[data-testid="stChatMessageContent"], .stMarkdown {{ color: #FAFAFA !important; }}
+    [data-testid="stAppViewContainer"] div[role="radiogroup"] {{ accent-color: {suptech_cyan}; }}
+    div.stButton > button {{ background-color: {suptech_cyan} !important; color: white !important; border: none !important; }}
+    div.stButton > button:hover {{ background-color: {suptech_blue} !important; color: white !important; }}
+    h1, h2, h3 {{ color: {suptech_cyan} !important; }} /* Swapped header color for better dark mode contrast */
+    [data-testid="stSidebar"] {{ background-color: #262730 !important; }}
+    div[data-testid="stChatInput"] input {{ color: #FAFAFA !important; }}
+    </style>
+    """, unsafe_allow_html=True)
 
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
